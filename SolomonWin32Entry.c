@@ -20,13 +20,26 @@ void SolomonWin32Entry(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 {
     // First we grab the number of command line arguments passed to us
     int argc;
-    LPWSTR* argstr = CommandLineToArgvW(GetCommandLine(), &argc);
+
+    LPWSTR* argstr = CommandLineToArgvW(GetCommandLineW(), &argc);
     *pArgc = argc;
 
     // break early if we haven't been passed a valid pointer to argv
     if (argv == NULL) return;
 
-    // Now fetch the command line arguments sent to us
+    for (size_t i = 0; i < argc; i++) {
+        // Reserve enough space for the characters in the wide strings
+        int stringlen = wcslen(argstr[i]) + 1;
+        argv[i] = malloc(stringlen * sizeof(char));
+
+        if (argv[i] == NULL) continue;
+
+        // Copy the contents of the wide string into the regular one
+        wcstombs(argv[i], argstr[i], stringlen);
+    }
+
+    // Remember to free the wide string handle
+    LocalFree(argstr);
 
     // Ensure that a console is always attached in debeg and release builds
     if (requestConsole && !consoleAttached) {
@@ -55,6 +68,9 @@ void SolomonWin32Entry(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 
 void SolomonWin32Exit()
 {
+    // Pause if we spawned the console
+    // because that means we didn't launch from one
+    // and we want to read the output
     if (consoleSpawnedByUs) {
         printf("\n");
         system("PAUSE");
