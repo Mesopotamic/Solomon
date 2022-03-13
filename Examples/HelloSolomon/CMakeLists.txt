@@ -16,9 +16,7 @@ target_include_directories(HelloSolomon PRIVATE ${SOLOMON_include_dirs})
 # into the working directory of the demo
 add_custom_command(
 	TARGET HelloSolomon POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	COMMENT "Copying Solomon Shared lib"
+	COMMAND ${CMAKE_COMMAND} -E copy
 	"$<TARGET_FILE:Solomon>"
 	"$<TARGET_FILE_DIR:HelloSolomon>")
-
-
-
