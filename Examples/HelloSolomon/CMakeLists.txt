@@ -9,7 +9,16 @@ add_executable(HelloSolomon WIN32 Main.c)
 add_subdirectory(../../ Solomon)
 
 # Link and include the solomon directories
-target_link_libraries(HelloSolomon Solomon)
+target_link_libraries(HelloSolomon PRIVATE Solomon)
 target_include_directories(HelloSolomon PRIVATE ${SOLOMON_include_dirs})
+
+# Add a custom build step which copies the Solomon shared library 
+# into the working directory of the demo
+add_custom_command(
+	TARGET HelloSolomon POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"$<TARGET_FILE:Solomon>"
+	"$<TARGET_FILE_DIR:HelloSolomon>")
+
 
 
