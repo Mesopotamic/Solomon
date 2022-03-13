@@ -6,6 +6,10 @@ project(Solomon VERSION 0.1.0 LANGUAGES C)
 # Adding this CMake sub-directory
 option(SOLOMON_BUILD_EXAMPLES "Build the examples for Solomon" ON)
 
+# Export all of the symbols on Windows 
+# So there's something to link at compile time
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # Stop the Solomon project from getting added multiple times
 if(TARGET Solomon)
     return()
