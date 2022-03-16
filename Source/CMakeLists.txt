@@ -5,4 +5,8 @@ target_sources(Solomon PRIVATE
 	${CMAKE_CURRENT_LIST_DIR}/SolomonCommon.h
 	${CMAKE_CURRENT_LIST_DIR}/SolomonCommon.c)
 
+# Add in the platform dependant stuff
+if(WIN32)
+	add_subdirectory(Win32)
+endif()
 
