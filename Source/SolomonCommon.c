@@ -1,4 +1,38 @@
 #include "SolomonCommon.h"
+
+/**
+ * Here we have the trampolines, where we set the internal data up ready to be sent into the platfrom specific
+ * section. i.e we don't want to implement tracking the height internally 4 different times
+ *
+ * In order to get the correct offset of the shared struct inside the handle, we have a fake wrapper
+ */
+typedef struct SolomonWindowPlatTemplate {
+    SolomonWindowCommon common;
+};
+
+SolomonWindow SolomonWindowAllocate() { return malloc(SolomonWindowSize()); }
+
+SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
+{
+    SolomonWindowCommon* temp = malloc(SolomonWindowSize());
+    if (!temp) return SolomonEnumMemAllocFail;
+
+    // Todo bounds and error check these
+
+    temp->x = x;
+    temp->y = y;
+    temp->w = w;
+    temp->title = title;
+
+    SolomonEnum err = PlatformWindowCreate(temp);
+    if (err) {
+        free(temp);
+        return NULL;
+    }
+
+    return (SolomonWindow)temp;
+}
+
 /**
  * Put the enum translator at the bottom
  */

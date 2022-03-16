@@ -39,6 +39,39 @@ typedef enum SolomonEnum {
  * @returns String containing the plain text version of the enum
  */
 const char* SolomonEnumTranslate(SolomonEnum e);
+
+/**
+ * @brief Gets the size of the internal Solomon window handle so user can allocate windows on their own if
+ * they'd like to
+ * @returns Size of SolomonWindowPrivate in bytes
+ */
+size_t SolomonWindowSize();
+
+/**
+ * @brief Allocates a Solomon window on the heap and returns a an opaque pointer to the handle
+ * @return SolomonWindow handle
+ */
+SolomonWindow SolomonWindowAllocate();
+
+/**
+ * @brief Allocates a Solomon window, on the heap and then hands the basic details over to the internal handle
+ * @param x X position of the top left corner of the window (-1 lets the OS decide)
+ * @param y Y position of the top left corner of the window (-1 lets the OS decide)
+ * @param w Width of the window in pixels
+ * @param h Height of the window in pixels
+ * @param title The heading given to the window title
+ * @returns Opaque handle to the pointer containing the window data
+ */
+SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title);
+
+/*************************************************************************************************************
+ * Produce the SolomonMain entry point, so that we can have graphics applications on both windows and linux,
+ * we use macros to replace the main function. Unfortunatley it is increadibly ugly, but blame Win32 for
+ * having a different entry point for GUI applications
+ *
+ * Because this is just so god damn ugly, we're gonna keep it at the bottom of the Solomon Header to hide my
+ * sins
+ *************************************************************************************************************/
 #ifdef SolomonMain
 #undef SolomonMain
 #endif
@@ -48,7 +81,6 @@ const char* SolomonEnumTranslate(SolomonEnum e);
 // the h instance, and finally calls back into user defined Solomon Main
 #ifdef WIN32
 #include <Windows.h>
-
 void SolomonWin32Entry(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine,
                        _In_ int nCmdShow, int* pArgv, char** argv);
 
