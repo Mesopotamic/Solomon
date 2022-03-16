@@ -22,6 +22,23 @@
 
 typedef void* SolomonWindow;
 
+/*************************************************************************************************************
+ * Solomon enums used for return codes, the SolomonEnumSuccess is 0, so you can use the functions how you
+ * would strcmp ie if(!SolomonFunction){HandleError}
+ *************************************************************************************************************/
+
+typedef enum SolomonEnum {
+    SolomonEnumSuccess = 0,   // The solomon function was successful
+    SolomonEnumMemAllocFail,  // The solomon function failed due to a malloc
+    SolomonEnumCount,         // The number of Solomon Enums
+} SolomonEnum;
+
+/**
+ * @brief Translates a solomon enum into it's plain text equivelent so you can look up error codes easier
+ * @param e Enum to be translated
+ * @returns String containing the plain text version of the enum
+ */
+const char* SolomonEnumTranslate(SolomonEnum e);
 #ifdef SolomonMain
 #undef SolomonMain
 #endif
