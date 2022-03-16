@@ -12,7 +12,16 @@
 #ifndef __SOLOMON_EXTERNAL_HEADER_H__
 #define __SOLOMON_EXTERNAL_HEADER_H__ (1)
 
-// Produce the SolomonMain define which allows the user to make a cross platform entry point
+/*************************************************************************************************************
+ * Different window systems require different headers, for example you can have linux x11, xcb, wayland etc...
+ * But we don't want users of Solomon to have to include those headers, or pass any extra defines to their
+ * application. How do we manage this?
+ * We also don't want to allow the user write access variables, because changing some int values won't update
+ * the window. To solve both of these problems we use an opaque handle.
+ *************************************************************************************************************/
+
+typedef void* SolomonWindow;
+
 #ifdef SolomonMain
 #undef SolomonMain
 #endif
