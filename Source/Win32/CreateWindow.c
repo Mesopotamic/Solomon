@@ -28,26 +28,26 @@ SolomonEnum PlatformWindowCreate(void* commonHandle)
     if (!s_winClassRegistered) tryRegisterWinClass();
 
     // Translate the opaque handle to the private visible windows one
-    SolomonWindowWin32 handle = *(SolomonWindowWin32*)commonHandle;
+    SolomonWindowWin32* handle = (SolomonWindowWin32*)commonHandle;
 
     // Now we can use the window handle and the information sent to us through the handle to create a new
     // window
     DWORD WindowStlye = WS_POPUP | WS_BORDER | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
-    handle.hwnd = CreateWindowEx(0,                   // Optional window styles
-                                 SOLOMON_CLASS_NAME,  // Window class name
-                                 handle.com.title,    // Window Title
-                                 WindowStlye,         // Window Style
-                                 10,                  // Initial horizontal position
-                                 10,                  // Initial vertical position
-                                 handle.com.w,        // Width
-                                 handle.com.h,        // Height
-                                 NULL,                // Parent window
-                                 NULL,                // Menu
-                                 s_hinstance,         // Application instance handle
-                                 NULL                 // Application extra info
+    handle->hwnd = CreateWindowEx(0,                   // Optional window styles
+                                  SOLOMON_CLASS_NAME,  // Window class name
+                                  handle->com.title,   // Window Title
+                                  WindowStlye,         // Window Style
+                                  10,                  // Initial horizontal position
+                                  10,                  // Initial vertical position
+                                  handle->com.w,       // Width
+                                  handle->com.h,       // Height
+                                  NULL,                // Parent window
+                                  NULL,                // Menu
+                                  s_hinstance,         // Application instance handle
+                                  NULL                 // Application extra info
     );
 
-    if (!handle.hwnd) return SolomonEnumOSFail;
+    if (!handle->hwnd) return SolomonEnumOSFail;
 
     return SolomonEnumSuccess;
 }
