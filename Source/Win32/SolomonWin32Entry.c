@@ -64,6 +64,9 @@ void SolomonWin32Entry(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
         FILE* fp = _fdopen(hConsole, "w");
         freopen_s(&fp, "CONOUT$", "w", stdout);
     }
+
+    // Store the applications instance handle
+    s_hinstance = hInstance;
 }
 
 void SolomonWin32Exit()
