@@ -19,7 +19,7 @@ endif()
 # Or else they spawn a console unnecessarily 
 # To handle that abstraction we introduce SolomonMain
 # which uses macros to abstract between main and win main
-add_library(Solomon SHARED SolomonWin32Entry.c Include/Solomon.h)
+add_library(Solomon SHARED Source/SolomonCommon.c Include/Solomon.h)
 
 # Now lets add the include public include directories for
 # Solomon.

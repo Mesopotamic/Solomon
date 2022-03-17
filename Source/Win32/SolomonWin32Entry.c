@@ -1,4 +1,4 @@
-#include "Solomon.h"
+#include "SolomonWin32.h"
 
 #include <fcntl.h>
 #include <stdbool.h>
