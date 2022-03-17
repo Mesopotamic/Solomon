@@ -3,6 +3,7 @@
  *************************************************************************************************************/
 #ifndef __SOLOMON_INTERNAL_COMMON_H__
 #define __SOLOMON_INTERNAL_COMMON_H__ (1)
+#include <stdbool.h>
 #include "Solomon.h"
 
 typedef struct SolomonWindowCommon {
@@ -11,6 +12,7 @@ typedef struct SolomonWindowCommon {
     int w;
     int h;
     char* title;
+    bool windowInit;
 } SolomonWindowCommon;
 
 /**

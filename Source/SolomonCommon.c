@@ -31,6 +31,7 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
         return NULL;
     }
 
+    temp->windowInit = true;
     return (SolomonWindow)temp;
 }
 
