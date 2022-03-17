@@ -52,4 +52,14 @@ SolomonEnum PlatformWindowCreate(void* commonHandle)
     return SolomonEnumSuccess;
 }
 
+SolomonEnum PlatformWindowShow(void* commonHandle)
+{
+    // In order to show the window we need the window handle
+    SolomonWindowWin32 window = *(SolomonWindowWin32*)commonHandle;
+    HWND windowHandle = ((SolomonWindowWin32*)commonHandle)->hwnd;
+    if (!windowHandle) return SolomonEnumSegFail;
+    ShowWindow(windowHandle, SW_NORMAL);
+    return SolomonEnumSuccess;
+}
+
 size_t SolomonWindowSize() { return sizeof(SolomonWindowWin32); }

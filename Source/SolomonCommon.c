@@ -35,6 +35,15 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
     return (SolomonWindow)temp;
 }
 
+SolomonEnum SolomonWindowShow(SolomonWindow window)
+{
+    if (!window) return SolomonEnumSegFail;
+    SolomonWindowCommon temp = *(SolomonWindowCommon*)window;
+
+    if (!temp.windowInit) return SolomonEnumNotInit;
+    return PlatformWindowShow(window);
+}
+
 /**
  * Put the enum translator at the bottom
  */

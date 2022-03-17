@@ -27,4 +27,6 @@ typedef struct SolomonWindowCommon {
  */
 SolomonEnum PlatformWindowCreate(void* commonHandle);
 
+SolomonEnum PlatformWindowShow(void* commonHandle);
+
 #endif  // !__SOLOMON_INTERNAL_COMMON_H__

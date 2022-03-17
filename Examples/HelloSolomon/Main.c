@@ -17,5 +17,9 @@ int SolomonMain(int argc, char* argv[])
         return -1;
     }
 
+    // Now that the window has been created, we can show it to the user. Then we enter in a windowing loop.
+    // Once per frame we have to evaluate all the events that happened, including if the OS requested the
+    // window to close. We keep doing this loop until the window closes
+    SolomonWindowShow(window);
     return 0;
 }
