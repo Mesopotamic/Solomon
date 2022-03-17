@@ -31,6 +31,7 @@ typedef enum SolomonEnum {
     SolomonEnumSuccess = 0,   // The solomon function was successful
     SolomonEnumMemAllocFail,  // The solomon function failed due to a malloc
     SolomonEnumOSFail,        // The failure came from the window system
+    SolomonEnumSegFail,       // Some kind of attempted Null reference was about to happen
     SolomonEnumCount,         // The number of Solomon Enums
 } SolomonEnum;
 
@@ -64,6 +65,13 @@ SolomonWindow SolomonWindowAllocate();
  * @returns Opaque handle to the pointer containing the window data
  */
 SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title);
+
+/**
+ * @brief Shows a successfully initialised window on screen
+ * @param window Solomon window handle
+ * @returns Success code
+ */
+SolomonEnum SolomonWindowShow(SolomonWindow window);
 
 /*************************************************************************************************************
  * Produce the SolomonMain entry point, so that we can have graphics applications on both windows and linux,
