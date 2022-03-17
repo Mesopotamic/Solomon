@@ -22,6 +22,7 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
     temp->x = x;
     temp->y = y;
     temp->w = w;
+    temp->h = h;
     temp->title = title;
 
     SolomonEnum err = PlatformWindowCreate(temp);
