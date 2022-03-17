@@ -39,6 +39,7 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
 const char* SolomonEnumTexts[SolomonEnumCount] = {
   "Success",                                                               // SolomonEnumSuccess
   "Failed at some point in the function because of a failed malloc call",  // SolomonEnumMemAllocFail
+  "Failed because of a windowing system error, ie Win32"                   // SolomonEnumOSFail
 };
 
 const char* SolomonEnumTranslate(SolomonEnum e)

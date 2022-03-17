@@ -30,6 +30,7 @@ typedef void* SolomonWindow;
 typedef enum SolomonEnum {
     SolomonEnumSuccess = 0,   // The solomon function was successful
     SolomonEnumMemAllocFail,  // The solomon function failed due to a malloc
+    SolomonEnumOSFail,        // The failure came from the window system
     SolomonEnumCount,         // The number of Solomon Enums
 } SolomonEnum;
 
