@@ -44,6 +44,14 @@ SolomonEnum SolomonWindowShow(SolomonWindow window)
     return PlatformWindowShow(window);
 }
 
+SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window)
+{
+    // Check that the window has been initiated first
+    SolomonWindowCommon temp = *(SolomonWindowCommon*)window;
+    if (!temp.windowInit) return SolomonEnumNotInit;
+
+    return PlatformWindowEvaluateEvents(window);
+}
 /**
  * Put the enum translator at the bottom
  */

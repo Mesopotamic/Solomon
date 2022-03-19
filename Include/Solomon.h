@@ -74,6 +74,13 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title);
  */
 SolomonEnum SolomonWindowShow(SolomonWindow window);
 
+/**
+ * @brief Evaluates the events that have happened since the last time this function was called, should be
+ * called at least once a frame to check for exiting the window loop
+ * @param window SolomonWindow handle for the window to process events for
+ * @returns Success code
+ */
+SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window);
 /*************************************************************************************************************
  * Produce the SolomonMain entry point, so that we can have graphics applications on both windows and linux,
  * we use macros to replace the main function. Unfortunatley it is increadibly ugly, but blame Win32 for

@@ -17,7 +17,12 @@ typedef struct SolomonWindowCommon {
 
 /**
  * We parse off into the platform specific stuff here, platform specific code has the Platform instead of
- * Solomon prefix. These are called by our trampolines after they have done all the common stuff
+ * Solomon prefix. These are called by our trampolines after they have done all the common stuff.
+ *
+ * If you want to port solomon to a new windowing system you need to implement all of the functions declared
+ * below and also the following extras:
+ *  -> A private Window handle
+ *  -> size_t SolomonWindowSize() to return the size of the handle above
  */
 
 /**
@@ -27,6 +32,18 @@ typedef struct SolomonWindowCommon {
  */
 SolomonEnum PlatformWindowCreate(void* commonHandle);
 
+/**
+ * @breif Attempt to make the window visible to the user
+ * @param commonHandle void pointer to the opaque handle
+ * @returns Solomon success code
+ */
 SolomonEnum PlatformWindowShow(void* commonHandle);
 
+/**
+ * @brief Evaluates the events that have happened since the last time this function was called, should be
+ * called at least once a frame to check for exiting the window loop
+ * @param window SolomonWindow handle for the window to process events for
+ * @returns Success code
+ */
+SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window);
 #endif  // !__SOLOMON_INTERNAL_COMMON_H__

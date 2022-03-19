@@ -4,4 +4,5 @@ target_sources(Solomon PRIVATE
 	${CMAKE_CURRENT_LIST_DIR}/SolomonWin32.h
 	${CMAKE_CURRENT_LIST_DIR}/SolomonWin32Entry.c
 	${CMAKE_CURRENT_LIST_DIR}/CreateWindow.c
-	${CMAKE_CURRENT_LIST_DIR}/Proc.c)
+	${CMAKE_CURRENT_LIST_DIR}/Proc.c
+	${CMAKE_CURRENT_LIST_DIR}/Events.c)
