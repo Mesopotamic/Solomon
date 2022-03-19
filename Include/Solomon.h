@@ -81,6 +81,15 @@ SolomonEnum SolomonWindowShow(SolomonWindow window);
  * @returns Success code
  */
 SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window);
+
+/**
+ * @brief Evaluates if the solomon window passed should remain in the windowing loop
+ * @param window the Solomon window handle to evaluate
+ * @returns 1 if the windowing loop should continue, 0 if it should exit, can be used as a boolean expression,
+ * for example in a while loop
+ */
+int SolomonWindowShouldContinue(SolomonWindow window);
+
 /*************************************************************************************************************
  * Produce the SolomonMain entry point, so that we can have graphics applications on both windows and linux,
  * we use macros to replace the main function. Unfortunatley it is increadibly ugly, but blame Win32 for

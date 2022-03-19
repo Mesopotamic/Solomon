@@ -3,6 +3,9 @@
 // Handle one frames worth of events in the win32
 SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
 {
+    // Grab the window handle in a way we can understand it
+    SolomonWindowWin32* handle = window;
+
     MSG msg;
     memset(&msg, 0, sizeof(MSG));
 
@@ -21,6 +24,9 @@ SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
             break;
         }
     }
+
+    // Was the msg a quit, if so, then we need to tell Solomon window handle that it should quit
+    handle->com.shouldContinue = msg.message != WM_QUIT;
 
     return SolomonEnumSuccess;
 }

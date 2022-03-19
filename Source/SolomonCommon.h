@@ -13,6 +13,7 @@ typedef struct SolomonWindowCommon {
     int h;
     char* title;
     bool windowInit;
+    bool shouldContinue;
 } SolomonWindowCommon;
 
 /**

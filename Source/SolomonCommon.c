@@ -31,6 +31,7 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
         return NULL;
     }
 
+    temp->shouldContinue = true;
     temp->windowInit = true;
     return (SolomonWindow)temp;
 }
@@ -52,6 +53,13 @@ SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window)
 
     return PlatformWindowEvaluateEvents(window);
 }
+
+int SolomonWindowShouldContinue(SolomonWindow window)
+{
+    if (!window) return 0;
+    return ((SolomonWindowCommon*)window)->shouldContinue;
+}
+
 /**
  * Put the enum translator at the bottom
  */

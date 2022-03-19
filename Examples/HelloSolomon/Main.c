@@ -21,5 +21,8 @@ int SolomonMain(int argc, char* argv[])
     // Once per frame we have to evaluate all the events that happened, including if the OS requested the
     // window to close. We keep doing this loop until the window closes
     SolomonWindowShow(window);
+    while (SolomonWindowShouldContinue(window)) {
+        SolomonWindowEvaluateEvents(window);
+    }
     return 0;
 }
