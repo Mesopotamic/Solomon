@@ -18,9 +18,16 @@
  * application. How do we manage this?
  * We also don't want to allow the user write access variables, because changing some int values won't update
  * the window. To solve both of these problems we use an opaque handle.
+ *
+ * The next thing we do with opaque handles is to define the Solomon rectangle, which represents a portion of
+ * the window, either split into an area by absolute coordinates or relative ones. In the future we plan to
+ * suply solomon UI elements via these rects. Then UI calls are made with the signiture
+ * SolomonUI*name*(SolomonWindow, rect, ...)
+ * If the user passes null to the rect, then the window will be treated as the rect.
  *************************************************************************************************************/
 
 typedef void* SolomonWindow;
+typedef void* SolomonRect;
 
 /*************************************************************************************************************
  * Solomon enums used for return codes, the SolomonEnumSuccess is 0, so you can use the functions how you
@@ -42,6 +49,11 @@ typedef enum SolomonEnum {
  * @returns String containing the plain text version of the enum
  */
 const char* SolomonEnumTranslate(SolomonEnum e);
+
+/*************************************************************************************************************
+ * This section is dedicated to the Solomon window fucntions, that provide the bare minimum you want from a
+ * GUI, if you use just this part, then most likely you'll be using Vulkan to draw directly to the swapchain
+ *************************************************************************************************************/
 
 /**
  * @brief Gets the size of the internal Solomon window handle so user can allocate windows on their own if
@@ -89,6 +101,10 @@ SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window);
  * for example in a while loop
  */
 int SolomonWindowShouldContinue(SolomonWindow window);
+
+/*************************************************************************************************************
+ * SolomonUI section, here is where you'll start using rects
+ *************************************************************************************************************/
 
 /*************************************************************************************************************
  * Produce the SolomonMain entry point, so that we can have graphics applications on both windows and linux,
