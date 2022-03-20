@@ -40,6 +40,12 @@ if(${SOLOMON_BUILD_EXAMPLES})
 endif()
 
 ################################################################
+# We need to do the linking in the top level cmake because 
+# of our cmake version, so do all the linking in here
+if(WIN32)
+    target_link_libraries(Solomon PRIVATE "Dwmapi.lib")
+endif()
+################################################################
 # Organize all source files, this is done last
 # Get all of the source files added to the project
 get_target_property(PROJ_SOURCES Solomon SOURCES)

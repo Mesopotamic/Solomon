@@ -32,7 +32,8 @@ SolomonEnum PlatformWindowCreate(void* commonHandle)
 
     // Now we can use the window handle and the information sent to us through the handle to create a new
     // window
-    DWORD WindowStlye = WS_BORDER | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
+    DWORD WindowStlye = WS_OVERLAPPEDWINDOW;
+
     handle->hwnd = CreateWindowEx(0,                   // Optional window styles
                                   SOLOMON_CLASS_NAME,  // Window class name
                                   handle->com.title,   // Window Title

@@ -4,6 +4,7 @@
 #ifndef __SOLOMON_WIN32_H__
 #define __SOLOMON_WIN32_H__ (1)
 
+#include <dwmapi.h>
 #include <stdbool.h>
 #include "SolomonCommon.h"
 
