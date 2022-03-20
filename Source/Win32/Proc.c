@@ -5,9 +5,9 @@ LRESULT CALLBACK SolomonWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
     switch (uMsg) {
         case WM_ACTIVATE: {
             MARGINS m;
-            m.cxLeftWidth = 0;
-            m.cxRightWidth = 0;
-            m.cyBottomHeight = 0;
+            m.cxLeftWidth = 1;
+            m.cxRightWidth = 1;
+            m.cyBottomHeight = 1;
             m.cyTopHeight = 0;
 
             DwmExtendFrameIntoClientArea(hwnd, &m);
