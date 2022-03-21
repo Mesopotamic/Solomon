@@ -8,6 +8,11 @@ SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
     // Grab the window handle in a way we can understand it
     SolomonWindowWin32* handle = window;
 
+    // Has the user already asked that we exit?
+    if (!handle->com.shouldContinue) {
+        DestroyWindow(handle->hwnd);
+    }
+
     MSG msg;
     memset(&msg, 0, sizeof(MSG));
 
@@ -41,7 +46,8 @@ SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
     }
 
     // Was the msg a quit, if so, then we need to tell Solomon window handle that it should quit
-    handle->com.shouldContinue = msg.message != WM_QUIT;
+    // Also if the user sent us a quit request then we should also exit
+    handle->com.shouldContinue &= msg.message != WM_QUIT;
 
     return SolomonEnumSuccess;
 }
