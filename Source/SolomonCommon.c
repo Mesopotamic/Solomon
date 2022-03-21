@@ -10,6 +10,9 @@ typedef struct SolomonWindowPlatTemplate {
     SolomonWindowCommon common;
 };
 
+// Default events so we don't have to use if statements in the
+void defaultSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e) { return; }
+
 SolomonWindow SolomonWindowAllocate() { return malloc(SolomonWindowSize()); }
 
 SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
@@ -24,6 +27,7 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
     temp->w = w;
     temp->h = h;
     temp->title = title;
+    temp->keyHandler = defaultSolomonKeyHandler;
 
     SolomonEnum err = PlatformWindowCreate(temp);
     if (err) {
@@ -58,6 +62,14 @@ int SolomonWindowShouldContinue(SolomonWindow window)
 {
     if (!window) return 0;
     return ((SolomonWindowCommon*)window)->shouldContinue;
+}
+
+SolomonEnum SolomonKeyEventAttachHandler(SolomonWindow window, SolomonKeyEventHandler handler)
+{
+    if (!window) return SolomonEnumSegFail;
+    if (!handler) return SolomonEnumSegFail;
+    SolomonWindowCommon* temp = window;
+    temp->keyHandler = handler;
 }
 
 /**

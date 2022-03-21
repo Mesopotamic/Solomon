@@ -24,6 +24,8 @@
  * suply solomon UI elements via these rects. Then UI calls are made with the signiture
  * SolomonUI*name*(SolomonWindow, rect, ...)
  * If the user passes null to the rect, then the window will be treated as the rect.
+ *
+ * For the event handling, we allow the user to pass a function pointer for the different types of callback
  *************************************************************************************************************/
 
 typedef void* SolomonWindow;
@@ -101,6 +103,40 @@ SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window);
  * for example in a while loop
  */
 int SolomonWindowShouldContinue(SolomonWindow window);
+
+/*************************************************************************************************************
+ * Solomon events and callback sections
+ *************************************************************************************************************/
+
+typedef enum SolomonKeyEvent { SolomonKeyEventDown, SolomonKeyEventUp } SolomonKeyEvent;
+
+typedef enum SolomonKey {
+    SolomonKeyW,
+    SolomonKeyA,
+    SolomonKeyS,
+    SolomonKeyD,
+    SolomonKeyESC,
+    SolomonKeySpace,
+    SolomonKeyEnter,
+    SolomonKeyNoKey,
+} SolomonKey;
+
+/**
+ * @brief Function signature of a function that get's fired when the user presses a key
+ * @param SolomonKey A key code for the event being fired
+ * @param SolomonKeyEvent Which type of event is happening to the key
+ */
+typedef void (*SolomonKeyEventHandler)(SolomonKey, SolomonKeyEvent);
+
+/**
+ * @brief Attaches the user defined function pointer to be ran whenever the window recieves an event to do
+ * with keys
+ * @param window The opaque solomon window handle
+ * @param handler Function pointer to a function that matches the signiture of SolomonKeyEventHandler. ie
+ * returns void and has SolomonKey and SolomonKeyEvent params
+ * @returns Solomon success code
+ */
+SolomonEnum SolomonKeyEventAttachHandler(SolomonWindow window, SolomonKeyEventHandler handler);
 
 /*************************************************************************************************************
  * SolomonUI section, here is where you'll start using rects

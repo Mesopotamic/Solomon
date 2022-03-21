@@ -14,6 +14,7 @@ typedef struct SolomonWindowCommon {
     char* title;
     bool windowInit;
     bool shouldContinue;
+    SolomonKeyEventHandler keyHandler;
 } SolomonWindowCommon;
 
 /**
@@ -47,4 +48,5 @@ SolomonEnum PlatformWindowShow(void* commonHandle);
  * @returns Success code
  */
 SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window);
+
 #endif  // !__SOLOMON_INTERNAL_COMMON_H__
