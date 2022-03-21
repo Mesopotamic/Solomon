@@ -43,7 +43,8 @@ SolomonEnum PlatformWindowShow(void* commonHandle);
 
 /**
  * @brief Evaluates the events that have happened since the last time this function was called, should be
- * called at least once a frame to check for exiting the window loop
+ * called at least once a frame to check for exiting the window loop. Needs to handle if the user has
+ * requested a close, if the operating system has requested a close, when a key has been pressed
  * @param window SolomonWindow handle for the window to process events for
  * @returns Success code
  */

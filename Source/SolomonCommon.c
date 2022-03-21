@@ -13,6 +13,10 @@ typedef struct SolomonWindowPlatTemplate {
 // Default events so we don't have to use if statements in the
 void defaultSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e) { return; }
 
+/*************************************************************************************************************
+ * Code that calls into platform dependant varient
+ *************************************************************************************************************/
+
 SolomonWindow SolomonWindowAllocate() { return malloc(SolomonWindowSize()); }
 
 SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
@@ -58,10 +62,27 @@ SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window)
     return PlatformWindowEvaluateEvents(window);
 }
 
+/*************************************************************************************************************
+ * Code that is not platform dependant
+ *************************************************************************************************************/
+
 int SolomonWindowShouldContinue(SolomonWindow window)
 {
     if (!window) return 0;
-    return ((SolomonWindowCommon*)window)->shouldContinue;
+    SolomonWindowCommon* temp = window;
+    return temp->shouldContinue;
+}
+
+SolomonEnum SolomonWindowScheduleClose(SolomonWindow window)
+{
+    if (!window) return SolomonEnumOSFail;
+    SolomonWindowCommon* temp = window;
+    temp->shouldContinue = false;
+
+    // Handle one more frame of messages, since the windowing loop should continues is checked before this
+    // frame of messages can play
+    SolomonWindowEvaluateEvents(window);
+    return SolomonEnumSuccess;
 }
 
 SolomonEnum SolomonKeyEventAttachHandler(SolomonWindow window, SolomonKeyEventHandler handler)
@@ -72,9 +93,10 @@ SolomonEnum SolomonKeyEventAttachHandler(SolomonWindow window, SolomonKeyEventHa
     temp->keyHandler = handler;
 }
 
-/**
- * Put the enum translator at the bottom
- */
+/*************************************************************************************************************
+ * Ugly enum translator
+ *************************************************************************************************************/
+
 const char* SolomonEnumTexts[SolomonEnumCount] = {
   "Success",                                                               // SolomonEnumSuccess
   "Failed at some point in the function because of a failed malloc call",  // SolomonEnumMemAllocFail

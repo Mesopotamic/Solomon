@@ -104,6 +104,14 @@ SolomonEnum SolomonWindowEvaluateEvents(SolomonWindow window);
  */
 int SolomonWindowShouldContinue(SolomonWindow window);
 
+/**
+ * @brief Sets the Solomon window to close, so that next time SolomonWindowShouldContinue is polled will
+ * return false
+ * @param window Opque Solomon window handle
+ * @returns  Solomon success code
+ */
+SolomonEnum SolomonWindowScheduleClose(SolomonWindow window);
+
 /*************************************************************************************************************
  * Solomon events and callback sections
  *************************************************************************************************************/
