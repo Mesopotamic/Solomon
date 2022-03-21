@@ -1,5 +1,7 @@
 #include "SolomonWin32.h"
 
+SolomonKey wParamToKey(WPARAM wparam);
+
 // Handle one frames worth of events in the win32
 SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
 {
@@ -18,6 +20,19 @@ SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
             // We recieved a regular message so we can dispatch and translate it
             TranslateMessage(&msg);
             DispatchMessage(&msg);
+
+            // Once the message has been handled by the operating system we can also perform our own things
+            // Like launching the windows event handler.
+            switch (msg.message) {
+                case WM_KEYDOWN:
+                    handle->com.keyHandler(wParamToKey(msg.wParam), SolomonKeyEventDown);
+                    break;
+                case WM_KEYUP:
+                    handle->com.keyHandler(wParamToKey(msg.wParam), SolomonKeyEventUp);
+                    break;
+                default:
+                    break;
+            }
         } else {
             // There was no message in the message buffer, so lets end the messaging loop and return control
             // back to the rest of solomon
@@ -29,4 +44,14 @@ SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
     handle->com.shouldContinue = msg.message != WM_QUIT;
 
     return SolomonEnumSuccess;
+}
+
+SolomonKey wParamToKey(WPARAM wparam)
+{
+    switch (wparam) {
+        case VK_ESCAPE:
+            return SolomonKeyESC;
+        default:
+            return SolomonKeyNoKey;
+    }
 }
