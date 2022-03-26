@@ -36,10 +36,10 @@ add_subdirectory(Source)
 if(${SOLOMON_BUILD_EXAMPLES})
     message(STATUS "Adding Solomon examples")
     add_subdirectory(Examples)
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT HelloSolomon)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT VulkanSurface)
     set_target_properties(Solomon PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:HelloSolomon>
-        LIBRARY_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:HelloSolomon>)
+        RUNTIME_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:VulkanSurface>
+        LIBRARY_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:VulkanSurface>)
 endif()
 
 ################################################################
