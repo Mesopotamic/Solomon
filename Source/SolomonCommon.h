@@ -6,6 +6,10 @@
 #include <stdbool.h>
 #include "Solomon.h"
 
+// Solomon Vulkan without prototypes
+#define VK_NO_PROTOTYPES
+#include "vulkan/vulkan.h"
+
 typedef struct SolomonWindowCommon {
     int x;
     int y;
@@ -49,5 +53,16 @@ SolomonEnum PlatformWindowShow(void* commonHandle);
  * @returns Success code
  */
 SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window);
+
+
+
+/**
+ * Extern for the Vulkan surface name, must be defined in the platform specific source files
+ */
+extern const char* PlatformVulkanSurfaceExtensionName;
+
+SolomonEnum PlatformUIVkCreateSurface(void* commonHandle, SolomonRect rect,
+                                      PFN_vkVoidFunction getInstanceProcAddr, VkInstance instance,
+                                      VkAllocationCallbacks* allocationCallbacks, VkSurfaceKHR* surface);
 
 #endif  // !__SOLOMON_INTERNAL_COMMON_H__

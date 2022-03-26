@@ -30,6 +30,9 @@ target_include_directories(Solomon PUBLIC ${SOLOMON_include_dirs})
 add_subdirectory(Source)
 
 # Only add the examples at the users request.
+# We also place the Solomon shared library output 
+# dir into the example being currently worked on
+# Ensures Solomon can be developed along side example
 if(${SOLOMON_BUILD_EXAMPLES})
     message(STATUS "Adding Solomon examples")
     add_subdirectory(Examples)
@@ -45,6 +48,17 @@ endif()
 if(WIN32)
     target_link_libraries(Solomon PRIVATE "Dwmapi.lib")
 endif()
+
+################################################################
+# Solomon also produces Vulkan surface extension abstraction
+# We only use the header
+find_package(Vulkan QUIET REQUIRED)
+if(NOT ${Vulkan_FOUND})
+    message(FATAL_ERROR "Couldn't find Vulkan installed on your system")
+endif()
+
+target_include_directories(Solomon PRIVATE ${Vulkan_INCLUDE_DIRS})
+
 ################################################################
 # Organize all source files, this is done last
 # Get all of the source files added to the project

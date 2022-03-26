@@ -150,6 +150,29 @@ SolomonEnum SolomonKeyEventAttachHandler(SolomonWindow window, SolomonKeyEventHa
  * SolomonUI section, here is where you'll start using rects
  *************************************************************************************************************/
 
+/**
+ * @brief Fetches the extension name for the Vulkan surface built into this version of Solomon
+ * @returns Pointer to a string of the structure VK_KHR_*_surface which tells the user which instance
+ * extension to enable in their Vulkan instance to allow Solomon to create the surface for them
+ */
+const char* SolomonUIVkGetSurfaceName();
+
+/**
+ * @brief Takes a Solomon UI rectangle and transforms it into a Vulkan surface which can be rendered to. If
+ * the rect pass is Null, then the entire window is transformed into a Vulkan surface. Throughout this process
+ * Vulkan objects are represented by void pointers. This is so Solomon can avoid including the Vulkan headers
+ * in the external Solomon header
+ * @param window Opaque handle to the Solomon window
+ * @param rect Opaque handle to the Solomon UI rect, or NULL to target the window
+ * @param getInstanceProcAddr Function pointer to the vulkan get instance proc address
+ * @param instance Valid VkInstance handle
+ * @param allocationCallbacks Pointer to the host memory allocated when no allocator in use. Usually NULL
+ * @param surfaceKHR Pointer to the surface handle which the surface is returned into
+ * @returns Solomon Success code, or a VK error on Vulkan fails.
+ */
+SolomonEnum SolomonUIVkCreateSurface(SolomonWindow window, SolomonRect rect, void* getInstanceProcAddr,
+                                     void* instance, void** allocationCallbacks, void** surfaceKHR);
+
 /*************************************************************************************************************
  * Produce the SolomonMain entry point, so that we can have graphics applications on both windows and linux,
  * we use macros to replace the main function. Unfortunatley it is increadibly ugly, but blame Win32 for
