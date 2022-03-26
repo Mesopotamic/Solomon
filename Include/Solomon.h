@@ -37,12 +37,14 @@ typedef void* SolomonRect;
  *************************************************************************************************************/
 
 typedef enum SolomonEnum {
-    SolomonEnumSuccess = 0,   // The solomon function was successful
-    SolomonEnumMemAllocFail,  // The solomon function failed due to a malloc
-    SolomonEnumOSFail,        // The failure came from the window system
-    SolomonEnumSegFail,       // Some kind of attempted Null reference was about to happen
-    SolomonEnumNotInit,       // Failed because an initialisation failed somewhere
-    SolomonEnumCount,         // The number of Solomon Enums
+    SolomonEnumSuccess = 0,    // The solomon function was successful
+    SolomonEnumMemAllocFail,   // The solomon function failed due to a malloc
+    SolomonEnumOSFail,         // The failure came from the window system
+    SolomonEnumSegFail,        // Some kind of attempted Null reference was about to happen
+    SolomonEnumNotInit,        // Failed because an initialisation failed somewhere
+    SolomonEnumVkProcFail,     // Failed when retrieving function pointer to platform's surface
+    SolomonEnumVkSurfaceFail,  // Vulkan error occured when trying to create surface
+    SolomonEnumCount,          // The number of Solomon Enums
 } SolomonEnum;
 
 /**
