@@ -14,8 +14,16 @@ VkInstance instance;
 VkSurfaceKHR surface;
 VkPhysicalDevice physicalDevice;
 VkDevice device;
+
+uint32_t gpQueueFamilyIndexes[2];
 VkQueue graphicsQueue;
 VkQueue presentQueue;
+
+VkSurfaceFormatKHR swapchainFormat;
+uint32_t swapLength;
+VkSwapchainKHR swapchain;
+VkImage* swapImages;
+VkImageView* swapImageViews;
 
 void createInstance();
 void postSurfaceVulkanInit();
@@ -150,6 +158,9 @@ void createLogicalDevice()
         queues[i].pQueuePriorities = &queueProprity;
         queues[i].flags = 0;
         queues[i].pNext = NULL;
+
+        // Store queue family indexes
+        gpQueueFamilyIndexes[i] = queues[i].queueFamilyIndex;
     }
 
     VkDeviceCreateInfo deviceInfo;
@@ -157,6 +168,9 @@ void createLogicalDevice()
     deviceInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     deviceInfo.pQueueCreateInfos = queues;
     deviceInfo.queueCreateInfoCount = queueCount;
+    const char* deviceExtensions[1] = {"VK_KHR_swapchain"};
+    deviceInfo.ppEnabledExtensionNames = deviceExtensions;
+    deviceInfo.enabledExtensionCount = 1;
 
     if (vkCreateDevice(physicalDevice, &deviceInfo, NULL, &device) != VK_SUCCESS) {
         printf("Couldn't create Logical device!\n");
@@ -167,8 +181,97 @@ void createLogicalDevice()
     vkGetDeviceQueue(device, queues[1].queueFamilyIndex, 0, &presentQueue);
 }
 
+void createSwapchain()
+{
+    // Find the first supported image format
+    uint32_t formatsCount;
+    vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatsCount, NULL);
+    VkSurfaceFormatKHR* formats = malloc(formatsCount * sizeof(VkSurfaceFormatKHR));
+    if (!formats) exit(-1);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatsCount, formats);
+    swapchainFormat = formats[0];
+    free(formats);
+
+    // Get how many images we need in the swapchain
+    VkSurfaceCapabilitiesKHR capablities;
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capablities);
+    swapLength = capablities.minImageCount;
+
+    VkSwapchainCreateInfoKHR info;
+    memset(&info, 0, sizeof(VkSwapchainCreateInfoKHR));
+    info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    info.surface = surface;
+
+    // Attach the format
+    info.imageFormat = swapchainFormat.format;
+    info.imageColorSpace = swapchainFormat.colorSpace;
+
+    // Guarenteed present mode
+    info.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+
+    // Used fixed image extent
+    VkExtent2D extent = {720, 360};
+    info.imageExtent = extent;
+    info.minImageCount = swapLength;
+
+    // If the graphics and present queue are different queues then we have to tell the swap images that they
+    // need to be shared between queues
+    if (gpQueueFamilyIndexes[0] == gpQueueFamilyIndexes[1]) {
+        info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    } else {
+        info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        info.queueFamilyIndexCount = 2;
+        info.pQueueFamilyIndices = gpQueueFamilyIndexes;
+    }
+
+    info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    info.clipped = VK_TRUE;
+    info.oldSwapchain = VK_NULL_HANDLE;
+    info.preTransform = capablities.currentTransform;
+    info.imageArrayLayers = 1;
+    info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+    if (vkCreateSwapchainKHR(device, &info, NULL, &swapchain) != VK_SUCCESS) {
+        printf("Failed to create a swapchain");
+        exit(-1);
+    }
+
+    // Retrieve those images
+    vkGetSwapchainImagesKHR(device, swapchain, &swapLength, NULL);
+    swapImages = malloc(swapLength * sizeof(VkImage));
+    if (!swapImages) exit(-1);
+    vkGetSwapchainImagesKHR(device, swapchain, &swapLength, swapImages);
+
+    // Produce an image view for those images
+    VkImageViewCreateInfo view;
+    memset(&view, 0, sizeof(VkImageViewCreateInfo));
+    view.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    view.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    view.format = swapchainFormat.format;
+    view.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    view.subresourceRange.baseMipLevel = 0;
+    view.subresourceRange.levelCount = 1;
+    view.subresourceRange.baseArrayLayer = 0;
+    view.subresourceRange.layerCount = 1;
+
+    swapImageViews = malloc(swapLength * sizeof(VkImageView));
+    if (!swapImageViews) exit(-1);
+
+    for (uint32_t i = 0; i < swapLength; i++) {
+        view.image = swapImages[i];
+        if (vkCreateImageView(device, &view, NULL, &swapImageViews[i]) != VK_SUCCESS) {
+            printf("Couldn't create image view %i", i);
+            exit(-1);
+        }
+    }
+}
 void postSurfaceVulkanInit()
 {
     createPhysicalDevice();
     createLogicalDevice();
+    createSwapchain();
 }
