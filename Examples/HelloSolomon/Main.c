@@ -43,8 +43,7 @@ int SolomonMain(int argc, char* argv[])
         SolomonWindowEvaluateEvents(window);
     }
 
-    // The windowing loop has finished so let's clean up solomon and inform the user that the exit has taken
-    // place
+    // The windowing loop has finished so let's clean up solomon and inform the user that the exit happened
     printf("Solomon ended\n");
     return 0;
 }
