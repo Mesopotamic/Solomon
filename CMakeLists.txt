@@ -47,6 +47,9 @@ endif()
 # of our cmake version, so do all the linking in here
 if(WIN32)
     target_link_libraries(Solomon PRIVATE "Dwmapi.lib")
+
+    # Win32 Vulkan surface
+    target_compile_definitions(Solomon PRIVATE "VK_USE_PLATFORM_WIN32_KHR")
 endif()
 
 ################################################################

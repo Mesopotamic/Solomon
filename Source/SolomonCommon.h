@@ -54,15 +54,13 @@ SolomonEnum PlatformWindowShow(void* commonHandle);
  */
 SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window);
 
-
-
 /**
  * Extern for the Vulkan surface name, must be defined in the platform specific source files
  */
 extern const char* PlatformVulkanSurfaceExtensionName;
 
 SolomonEnum PlatformUIVkCreateSurface(void* commonHandle, SolomonRect rect,
-                                      PFN_vkVoidFunction getInstanceProcAddr, VkInstance instance,
+                                      PFN_vkGetInstanceProcAddr getInstanceProcAddr, VkInstance instance,
                                       VkAllocationCallbacks* allocationCallbacks, VkSurfaceKHR* surface);
 
 #endif  // !__SOLOMON_INTERNAL_COMMON_H__

@@ -101,8 +101,10 @@ const char* SolomonEnumTexts[SolomonEnumCount] = {
   "Success",                                                               // SolomonEnumSuccess
   "Failed at some point in the function because of a failed malloc call",  // SolomonEnumMemAllocFail
   "Failed because of a windowing system error, ie Win32",                  // SolomonEnumOSFail
-  "Failed because a Solomon object wasn't initialised "                    // SolomonEnumNotInit
-  "Failed because a Null pointer was about to be dereferenced"             // SolomonEnumSegFail
+  "Failed because a Null pointer was about to be dereferenced",            // SolomonEnumSegFail
+  "Failed because a Solomon object wasn't initialised ",                   // SolomonEnumNotInit
+  "Failed when using vkGetInstanceProcAddr",                               // SolomonEnumVkProcFail,
+  "Failed when trying to use a platforms vkCreate*Surface",                // SolomonEnumVkSurfaceFail,
 };
 
 const char* SolomonEnumTranslate(SolomonEnum e)
