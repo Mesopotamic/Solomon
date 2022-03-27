@@ -25,3 +25,22 @@ add_custom_command(
 find_package(Vulkan QUIET REQUIRED)
 target_link_libraries(VulkanSurface PRIVATE ${Vulkan_LIBRARIES})
 target_include_directories(VulkanSurface PRIVATE ${Vulkan_INCLUDE_DIR})
+
+# Set Visual studio to read files where the executable is located
+set_target_properties(VulkanSurface PROPERTIES
+	VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:VulkanSurface>)
+
+# Copy shaders to the executable's location
+add_custom_command(
+	TARGET VulkanSurface POST_BUILD
+	COMMENT "Copying Shaders"
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${CMAKE_CURRENT_LIST_DIR}/Shader.vert.spv"
+	"$<TARGET_FILE_DIR:VulkanSurface>")
+
+add_custom_command(
+	TARGET VulkanSurface POST_BUILD
+	COMMENT "Copying Shaders"
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${CMAKE_CURRENT_LIST_DIR}/Shader.frag.spv"
+	"$<TARGET_FILE_DIR:VulkanSurface>")
