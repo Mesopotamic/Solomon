@@ -137,9 +137,11 @@ int SolomonMain(int argc, char* argv[])
     vkDestroyRenderPass(device, renderpass, NULL);
     vkDestroyDevice(device, NULL);
 
+#ifndef NDEBUG
     PFN_vkDestroyDebugUtilsMessengerEXT destroy =
       vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
     destroy(instance, debugMessenger, NULL);
+#endif
     vkDestroyInstance(instance, NULL);
 
     free(swapImages);
@@ -179,13 +181,19 @@ void createInstance()
 
     VkInstanceCreateInfo instanceInfo;
     instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    instanceInfo.enabledExtensionCount = 3;
+    instanceInfo.enabledExtensionCount = 2;
     instanceInfo.ppEnabledExtensionNames = instanceExtensions;
-    instanceInfo.enabledLayerCount = 1;
+    instanceInfo.enabledLayerCount = 0;
     instanceInfo.ppEnabledLayerNames = instanceLayers;
     instanceInfo.pApplicationInfo = &appInfo;
     instanceInfo.flags = 0;
     instanceInfo.pNext = NULL;
+
+    // Enable the validation layers in debug mode
+#ifndef NDEBUG
+    instanceInfo.enabledExtensionCount = 3;
+    instanceInfo.enabledLayerCount = 1;
+#endif  // !DEBUG
 
     if (vkCreateInstance(&instanceInfo, NULL, &instance) != VK_SUCCESS) {
         printf("Could not create Vulkan instance successfully\n");
@@ -200,9 +208,12 @@ void createInstance()
     debug.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
                         VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
                         VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+
+#ifndef NDEBUG
     PFN_vkCreateDebugUtilsMessengerEXT createDebugUtilsMessengerEXT =
       vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
     createDebugUtilsMessengerEXT(instance, &debug, NULL, &debugMessenger);
+#endif  // !DEBUG
 }
 
 /**
@@ -597,6 +608,7 @@ void createGraphicsPipeline()
     stages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
     stages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
+    // Graphics pipeline
     VkGraphicsPipelineCreateInfo info;
     memset(&info, 0, sizeof(VkGraphicsPipelineCreateInfo));
     info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
