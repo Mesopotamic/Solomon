@@ -10,11 +10,16 @@
 #define VK_NO_PROTOTYPES
 #include "vulkan/vulkan.h"
 
-typedef struct SolomonWindowCommon {
+typedef struct SolomonInternalRect {
     int x;
     int y;
     int w;
     int h;
+    void* extras;
+} SolomonInternalRect;
+
+typedef struct SolomonWindowCommon {
+    SolomonInternalRect rect;
     char* title;
     bool windowInit;
     bool shouldContinue;

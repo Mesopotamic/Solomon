@@ -40,8 +40,8 @@ SolomonEnum PlatformWindowCreate(void* commonHandle)
                                   WindowStlye,         // Window Style
                                   10,                  // Initial horizontal position
                                   10,                  // Initial vertical position
-                                  handle->com.w,       // Width
-                                  handle->com.h,       // Height
+                                  handle->com.rect.w,  // Width
+                                  handle->com.rect.h,  // Height
                                   NULL,                // Parent window
                                   NULL,                // Menu
                                   s_hinstance,         // Application instance handle

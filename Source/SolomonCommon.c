@@ -3,14 +3,9 @@
 /**
  * Here we have the trampolines, where we set the internal data up ready to be sent into the platfrom specific
  * section. i.e we don't want to implement tracking the height internally 4 different times
- *
- * In order to get the correct offset of the shared struct inside the handle, we have a fake wrapper
  */
-typedef struct SolomonWindowPlatTemplate {
-    SolomonWindowCommon common;
-};
 
-// Default events so we don't have to use if statements in the
+// Default events so we don't have to use if statements in the window loop
 void defaultSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e) { return; }
 
 /*************************************************************************************************************
@@ -26,10 +21,10 @@ SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
 
     // Todo bounds and error check these
 
-    temp->x = x;
-    temp->y = y;
-    temp->w = w;
-    temp->h = h;
+    temp->rect.x = x;
+    temp->rect.y = y;
+    temp->rect.w = w;
+    temp->rect.h = h;
     temp->title = title;
     temp->keyHandler = defaultSolomonKeyHandler;
 
