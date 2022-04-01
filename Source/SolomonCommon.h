@@ -37,6 +37,12 @@ typedef struct SolomonWindowCommon {
  */
 
 /**
+ * @brief Gets the internal size of the window in bytes
+ * @returns Size of internal window handle
+ */
+size_t PlatformWindowSize();
+
+/**
  * @brief Hands off the rest of the window creation to the platform dependant part
  * @param commonHandle void pointer to the opaque handle
  * @returns Solomon successcode
