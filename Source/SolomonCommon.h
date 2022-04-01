@@ -4,6 +4,8 @@
 #ifndef __SOLOMON_INTERNAL_COMMON_H__
 #define __SOLOMON_INTERNAL_COMMON_H__ (1)
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 #include "Solomon.h"
 
 // Solomon Vulkan without prototypes
