@@ -24,6 +24,10 @@ SolomonEnum PlatformWindowCreate(void* commonHandle)
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, root->root_visual, XCB_CW_BACK_PIXEL,
                       &root->white_pixel);
 
+    // Store some of the most useful cookies
+    xcb_intern_atom_cookie_t cookie = xcb_intern_atom(s_connection, 0, 16, "WM_DELETE_WINDOW");
+    handle->replyExit = xcb_intern_atom_reply(s_connection, cookie, NULL);
+
     return SolomonEnumSuccess;
 }
 

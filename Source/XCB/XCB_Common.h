@@ -4,6 +4,7 @@
 typedef struct SolomonWindowXCB {
     SolomonWindowCommon com;
     xcb_window_t window_id;
+    xcb_intern_atom_reply_t* replyExit;
 } SolomonWindowXCB;
 
 // Pointer to the global xcb connection for this application
