@@ -9,5 +9,7 @@ target_sources(Solomon PRIVATE
 # Add in the platform dependant stuff
 if(WIN32)
 	add_subdirectory(Win32)
+elseif(UNIX AND NOT APPLE)
+	add_subdirectory(XCB)
 endif()
 
