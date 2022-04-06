@@ -12,18 +12,25 @@ SolomonEnum PlatformWindowEvaluateEvents(SolomonWindow window)
         // Every event contains an 8bit type code, the most significant bit is set if the event was generated
         // from a sendEvent request. So we need to ensure that this bit is always set to 0 so we can properly
         // evaluate events regardless of where they came from
+        //
         switch (e->response_type & ~0x80) {
-            // We've recieved a message from the client, likely to be a close request
+            // We've recieved a message from the client, we can then decode the contents of a message by
+            // comparing the data to the atom
             case XCB_CLIENT_MESSAGE: {
                 xcb_client_message_event_t *client = e;
-                if (client->data.data32[0] == handle->replyExit->atom) {
-                    // We have recieved a message from the server which was the same reply when we sent the
-                    // exit cookie
+                if (client->data.data32[0] == handle->closeReply->atom) {
                     handle->com.shouldContinue = false;
+                    xcb_destroy_window(s_connection, handle->window_id);
+                    xcb_flush(s_connection);
                     return;
                 }
                 break;
             }
+
+            case XCB_EXPOSE: {
+                break;
+            }
+
             // Unknown event
             default:
                 break;
