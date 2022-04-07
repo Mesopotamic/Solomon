@@ -7,6 +7,9 @@ CMakeSettings.json
 # VS folder
 .vs/
 
+# VS Code folder
+.vscode/
+
 # out folder which is where the bins for VS2022 and WSL go
 out/
 
