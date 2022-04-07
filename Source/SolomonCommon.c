@@ -12,11 +12,11 @@ void defaultSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e) { return; }
  * Code that calls into platform dependant varient
  *************************************************************************************************************/
 
-SolomonWindow SolomonWindowAllocate() { return malloc(SolomonWindowSize()); }
+SolomonWindow SolomonWindowAllocate() { return malloc(PlatformWindowSize()); }
 
 SolomonWindow SolomonWindowCreate(int x, int y, int w, int h, char* title)
 {
-    SolomonWindowCommon* temp = malloc(SolomonWindowSize());
+    SolomonWindowCommon* temp = malloc(PlatformWindowSize());
     if (!temp) return SolomonEnumMemAllocFail;
 
     // Todo bounds and error check these

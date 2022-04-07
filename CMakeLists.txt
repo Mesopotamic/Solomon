@@ -48,6 +48,20 @@ endif()
 if(WIN32)
     # Win32 Vulkan surface
     target_compile_definitions(Solomon PRIVATE "VK_USE_PLATFORM_WIN32_KHR")
+elseif(UNIX AND NOT APPLE)
+    # Linux builds, for now we only support XCB on linux
+    set(LINUX TRUE CACHE BOOL "True when linux is platform is detected")
+    target_compile_definitions(Solomon PRIVATE "VK_USE_PLATFORM_XCB_KHR")
+
+    # Link and include XCB by producing an imported target
+    target_link_libraries(Solomon PRIVATE /usr/lib/x86_64-linux-gnu/libxcb-randr.so)
+    add_library(XCB SHARED IMPORTED)
+    set_target_properties(XCB PROPERTIES IMPORTED_LOCATION 
+        "/usr/lib/x86_64-linux-gnu/libxcb.so")
+    target_include_directories(XCB INTERFACE "/usr/include/X11")
+
+    target_link_libraries(Solomon PRIVATE XCB)
+
 endif()
 
 ################################################################

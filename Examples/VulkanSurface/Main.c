@@ -8,7 +8,9 @@
 #include "vulkan/vulkan.h"
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // Base Vulkan structures
 VkInstance instance;
@@ -172,7 +174,7 @@ void createInstance()
     // We need an app info to tell Vulkan what our app is doing
     VkApplicationInfo appInfo;
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.apiVersion = VK_VERSION_1_0;
+    appInfo.apiVersion = VK_API_VERSION_1_0;
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.pApplicationName = "Vulkan Surface";
@@ -181,25 +183,74 @@ void createInstance()
 
     VkInstanceCreateInfo instanceInfo;
     instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    instanceInfo.enabledExtensionCount = 2;
+    instanceInfo.enabledExtensionCount = 3;
     instanceInfo.ppEnabledExtensionNames = instanceExtensions;
-    instanceInfo.enabledLayerCount = 0;
+    instanceInfo.enabledLayerCount = 1;
     instanceInfo.ppEnabledLayerNames = instanceLayers;
     instanceInfo.pApplicationInfo = &appInfo;
     instanceInfo.flags = 0;
     instanceInfo.pNext = NULL;
 
-    // Enable the validation layers in debug mode
-#ifndef NDEBUG
-    instanceInfo.enabledExtensionCount = 3;
-    instanceInfo.enabledLayerCount = 1;
-#endif  // !DEBUG
+    // Get all of the layers supported by this instance
+    uint32_t layerCount;
+    vkEnumerateInstanceLayerProperties(&layerCount, NULL);
+    VkLayerProperties* layers = malloc(layerCount * sizeof(VkLayerProperties));
+    if (layers) vkEnumerateInstanceLayerProperties(&layerCount, layers);
 
-    if (vkCreateInstance(&instanceInfo, NULL, &instance) != VK_SUCCESS) {
-        printf("Could not create Vulkan instance successfully\n");
-        exit(-1);
+    // Search the supported layers for validation
+    bool validationLayerSupported = false;
+    for (uint32_t i = 0; i < layerCount; i++) {
+        if (layers + i == NULL) break;
+
+        if (!strcmp(layers[i].layerName, "VK_LAYER_KHRONOS_validation")) {
+            validationLayerSupported = true;
+            break;
+        }
     }
 
+    // If the validation layers aren't supported we can disable the features by reducing the layer and
+    // extension count so Vulkan won't look for the layer and extension
+    if (!validationLayerSupported) {
+        instanceInfo.enabledLayerCount -= 1;
+        instanceInfo.enabledExtensionCount -= 1;
+    }
+
+    // Now we need to get all the supported instance extensions
+    uint32_t extensionCount;
+    vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, NULL);
+    VkExtensionProperties* extensions = malloc(extensionCount * sizeof(VkExtensionProperties));
+    if (extensions) vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, extensions);
+
+    // Loop through all of the instance extensions and compare them to the requested instance extensions. Some
+    // of the instance extensions are required, such as the ones to do with the surface. The debug utils
+    // extension effects the creation of the debug messenger later on
+    bool debugUtilsSuported = true && validationLayerSupported;
+    for (uint32_t i = 0; i < instanceInfo.enabledExtensionCount; i++) {
+        bool extFound = false;
+        for (uint32_t j = 0; j < extensionCount; j++) {
+            if (extensions + j == NULL) break;
+
+            if (!strcmp(instanceExtensions[i], extensions[j].extensionName)) {
+                extFound = true;
+                break;
+            }
+        }
+
+        // Handle the extension not being found
+        if (!extFound) {
+            if (strcmp(instanceExtensions[i], VK_EXT_DEBUG_UTILS_EXTENSION_NAME)) {
+                // If the extension not found was not debug utils, we can't contine
+                printf("Missing the required extension %s", instanceExtensions[i]);
+                exit(-1);
+            } else {
+                // The missing extension was debug utils, mark it as not usable
+                debugUtilsSuported = false;
+                instanceInfo.enabledExtensionCount -= 1;
+            }
+        }
+    }
+
+    // Create a debug messenger to tell us when we get an error
     VkDebugUtilsMessengerCreateInfoEXT debug;
     memset(&debug, 0, sizeof(VkDebugUtilsMessengerCreateInfoEXT));
     debug.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -208,6 +259,15 @@ void createInstance()
     debug.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
                         VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
                         VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+
+    // If debug utils was supported we can attach this to the pNext chain of the instance create info in order
+    // to debug the instance creation
+    if (debugUtilsSuported) instanceInfo.pNext = &debug;
+
+    if (vkCreateInstance(&instanceInfo, NULL, &instance) != VK_SUCCESS) {
+        printf("Could not create Vulkan instance successfully\n");
+        exit(-1);
+    }
 
 #ifndef NDEBUG
     PFN_vkCreateDebugUtilsMessengerEXT createDebugUtilsMessengerEXT =
@@ -349,8 +409,8 @@ void createSwapchain()
     info.imageExtent = swapExtent;
     info.minImageCount = swapLength;
 
-    // If the graphics and present queue are different queues then we have to tell the swap images that they
-    // need to be shared between queues
+    // If the graphics and present queue are different queues then we have to tell the swap images that
+    // they need to be shared between queues
     if (gpQueueFamilyIndexes[0] == gpQueueFamilyIndexes[1]) {
         info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     } else {

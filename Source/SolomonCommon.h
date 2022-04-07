@@ -4,6 +4,8 @@
 #ifndef __SOLOMON_INTERNAL_COMMON_H__
 #define __SOLOMON_INTERNAL_COMMON_H__ (1)
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 #include "Solomon.h"
 
 // Solomon Vulkan without prototypes
@@ -35,6 +37,12 @@ typedef struct SolomonWindowCommon {
  *  -> A private Window handle
  *  -> size_t SolomonWindowSize() to return the size of the handle above
  */
+
+/**
+ * @brief Gets the internal size of the window in bytes
+ * @returns Size of internal window handle
+ */
+size_t PlatformWindowSize();
 
 /**
  * @brief Hands off the rest of the window creation to the platform dependant part

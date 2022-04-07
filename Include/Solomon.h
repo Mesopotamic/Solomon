@@ -60,13 +60,6 @@ const char* SolomonEnumTranslate(SolomonEnum e);
  *************************************************************************************************************/
 
 /**
- * @brief Gets the size of the internal Solomon window handle so user can allocate windows on their own if
- * they'd like to
- * @returns Size of SolomonWindowPrivate in bytes
- */
-size_t SolomonWindowSize();
-
-/**
  * @brief Allocates a Solomon window on the heap and returns a an opaque pointer to the handle
  * @return SolomonWindow handle
  */
