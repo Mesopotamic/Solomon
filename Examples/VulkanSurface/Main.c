@@ -172,7 +172,7 @@ void createInstance()
     // We need an app info to tell Vulkan what our app is doing
     VkApplicationInfo appInfo;
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.apiVersion = VK_VERSION_1_0;
+    appInfo.apiVersion = VK_API_VERSION_1_0;
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.pApplicationName = "Vulkan Surface";
