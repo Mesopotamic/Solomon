@@ -1,10 +1,11 @@
 /*************************************************************************************************************
  * Solomon
- * The basic cross platform windowing system which aims to reduce ugly defaul window bars as much as possible
+ * The basic cross platform windowing system which aims to use a non immediate rendering system by 
+ * communicating with the operating system. Providing a Vulkan Surface creation abstraction layer.
  *
- * Copyright 2022-
- * License : MIT
- * Authours :
+ * License   : GPL3
+ * Copyright : 2022 Mesopotamic   
+ * Authours  :
  *		Lawrence G
  *************************************************************************************************************/
 
