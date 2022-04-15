@@ -38,7 +38,7 @@ target_include_directories(Solomon PUBLIC ${SOLOMON_include_dirs})
 add_subdirectory(Source)
 
 # Only build the examples apon the users request 
-if(${SOLOMON_BUILD_EXAMPLES})
+if(${MESO_BUILD_EXAMPLES})
     message(STATUS "Adding Solomon examples")
     add_subdirectory(Examples)
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT VulkanSurface)
