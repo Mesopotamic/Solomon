@@ -1,39 +1,44 @@
-cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(Solomon VERSION 0.1.0 LANGUAGES C)
 
-# All of the options that control how Solomon is built
-# You can edit these by setting cache variables before 
-# Adding this CMake sub-directory
-option(SOLOMON_BUILD_EXAMPLES "Build the examples for Solomon" ON)
+# CMake used for every Mesopotamic project ========================
 
-# Export all of the symbols on Windows 
-# So there's something to link at compile time
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+# Builds can be ran for just Solomon or the Mesopotamic root
+# The dependencies have different locations based on where the
+# build originates from, cache the component variables
+# If build root is mesopotamic then these caches won't overwrite
+set(MESO_SOLOMON ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "")
+
+# Has the user specificed a static build of the library?
+# This is done when working on Mesopotamic components 
+# because you don't have to copy the components across
+# Although by default we build shared libraries with 
+# all their symbols exported
+if(${MESO_BUILD_STATIC})
+    set(BUILD_TYPE "")
+else()
+    set(BUILD_TYPE "SHARED")
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+# =================================================================
 
 # Stop the Solomon project from getting added multiple times
 if(TARGET Solomon)
     return()
 endif()
 
-# On Windows, GUI applications need to use WinMain
-# Or else they spawn a console unnecessarily 
-# To handle that abstraction we introduce SolomonMain
-# which uses macros to abstract between main and win main
-add_library(Solomon SHARED Source/SolomonCommon.c Include/Solomon.h)
+# Add the Solomon library
+add_library(Solomon ${BUILD_TYPE} Source/SolomonCommon.c Include/Solomon.h)
 
-# Now lets add the include public include directories for
-# Solomon.
+# Set the Solomon include directory 
 set(SOLOMON_include_dirs "${CMAKE_CURRENT_LIST_DIR}/Include" CACHE PATH "Path to Solomon header")
 target_include_directories(Solomon PUBLIC ${SOLOMON_include_dirs})
 
 # Add the rest of the Solomon source files to build the shared library
 add_subdirectory(Source)
 
-# Only add the examples at the users request.
-# We also place the Solomon shared library output 
-# dir into the example being currently worked on
-# Ensures Solomon can be developed along side example
-if(${SOLOMON_BUILD_EXAMPLES})
+# Only build the examples apon the users request 
+if(${MESO_BUILD_EXAMPLES})
     message(STATUS "Adding Solomon examples")
     add_subdirectory(Examples)
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT VulkanSurface)
