@@ -63,4 +63,4 @@ SolomonEnum PlatformWindowShow(void* commonHandle)
     return SolomonEnumSuccess;
 }
 
-size_t SolomonWindowSize() { return sizeof(SolomonWindowWin32); }
+size_t PlatformWindowSize() { return sizeof(SolomonWindowWin32); }
