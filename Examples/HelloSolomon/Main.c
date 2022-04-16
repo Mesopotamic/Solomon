@@ -11,7 +11,7 @@ SolomonWindow window = NULL;
  * @param key The key code
  * @param e event type
  */
-void defaultSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e);
+void customSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e);
 
 /**
  * @brief Solomon Entry point. This is a macro that abstracts main, winmain etc, so that all Solomon apps can
@@ -33,7 +33,7 @@ int SolomonMain(int argc, char* argv[])
         printf("\nWhoops, window creation failed!\n");
         return -1;
     }
-    SolomonKeyEventAttachHandler(window, defaultSolomonKeyHandler);
+    SolomonKeyEventAttachHandler(window, customSolomonKeyHandler);
 
     // Now that the window has been created, we can show it to the user. Then we enter in a windowing loop.
     // Once per frame we have to evaluate all the events that happened, including if the OS requested the
@@ -48,7 +48,7 @@ int SolomonMain(int argc, char* argv[])
     return 0;
 }
 
-void defaultSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e)
+void customSolomonKeyHandler(SolomonKey key, SolomonKeyEvent e)
 {
     // Exit when the user presses esc key
     if (key == SolomonKeyESC && e == SolomonKeyEventDown) {

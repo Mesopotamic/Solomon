@@ -22,15 +22,15 @@ else()
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-# Add in the CMake helpers used by all mesopotamic projects
-list(APPEND CMAKE_MODULE_PATH ${MESO_CMAKE})
-include(Mesopotamic)
-# =================================================================
-
 # Stop the Solomon project from getting added multiple times
 if(TARGET Solomon)
     return()
 endif()
+
+# Add in the CMake helpers used by all mesopotamic projects
+list(APPEND CMAKE_MODULE_PATH ${MESO_CMAKE})
+include(Mesopotamic)
+# =================================================================
 
 # Add the Solomon library
 add_library(Solomon ${BUILD_TYPE} Source/SolomonCommon.c Include/Solomon.h)
